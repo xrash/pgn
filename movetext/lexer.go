@@ -14,6 +14,10 @@ func searchingNumberOrHalfMoveOrResult(l *lexy.Lexer, r rune) (lexy.State, error
 		return inBraceCommentary, nil
 	}
 
+	if r == '(' {
+		return inParenthesisCommentary, nil
+	}
+
 	if r == '*' {
 		l.Collect(r)
 		l.Emit("Result")
@@ -39,6 +43,14 @@ func inBraceCommentary(l *lexy.Lexer, r rune) (lexy.State, error) {
 	}
 
 	return inBraceCommentary, nil
+}
+
+func inParenthesisCommentary(l *lexy.Lexer, r rune) (lexy.State, error) {
+	if r == ')' {
+		return searchingNumberOrHalfMoveOrResult, nil
+	}
+
+	return inParenthesisCommentary, nil
 }
 
 func inNumberOrResult(l *lexy.Lexer, r rune) (lexy.State, error) {
