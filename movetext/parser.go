@@ -29,28 +29,28 @@ func (p *parser) parse(back chan *parserResult) {
 	var err error
 	movetext := NewMovetext()
 
+	fmt.Println("parse movetext")
 	for t := range p.tokens {
-		if t.Key == lexy.ErrorToken {
-			back <- &parserResult{
-				err: fmt.Errorf("%s", t.Value),
-			}
-			return
+		if t.Key == lexy.EOFToken {
+			break
 		}
 
-		if t.Key == lexy.EOFToken {
-			back <- &parserResult{
-				movetext: movetext,
-			}
-			return
+		if t.Key == lexy.ErrorToken {
+			err = fmt.Errorf("Error parsing %s: %v", t.Value, err)
+			break
 		}
 
 		state, err = state(t, movetext)
 		if err != nil {
-			back <- &parserResult{
-				err: fmt.Errorf("%s", t.Value),
-			}
-			return
+			err = fmt.Errorf("Error parsing %s: %v", t.Value, err)
+			break
 		}
+	}
+
+	fmt.Println("wat")
+	back <- &parserResult{
+		movetext: movetext,
+		err:      err,
 	}
 }
 

@@ -13,6 +13,7 @@ func init() {
 }
 
 func createTestCase1() {
+
 	tagpairs := &tagpairs.Tagpairs{
 		Data: map[string]string{
 			"Event":  "F/S Return Match",

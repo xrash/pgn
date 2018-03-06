@@ -30,27 +30,25 @@ func (p *parser) parse(back chan *parserResult) {
 	tagpairs := NewTagpairs()
 
 	for t := range p.tokens {
-		if t.Key == lexy.ErrorToken {
-			back <- &parserResult{
-				err: fmt.Errorf("%s", t.Value),
-			}
-			return
+		if t.Key == lexy.EOFToken {
+			break
 		}
 
-		if t.Key == lexy.EOFToken {
-			back <- &parserResult{
-				tagpairs: tagpairs,
-			}
-			return
+		if t.Key == lexy.ErrorToken {
+			err = fmt.Errorf("Error parsing %s: %v", t.Value, err)
+			break
 		}
 
 		state, err = state(t, tagpairs)
 		if err != nil {
-			back <- &parserResult{
-				err: fmt.Errorf("%s", t.Value),
-			}
-			return
+			err = fmt.Errorf("Error parsing %s: %v", t.Value, err)
+			break
 		}
+	}
+
+	back <- &parserResult{
+		tagpairs: tagpairs,
+		err:      err,
 	}
 }
 

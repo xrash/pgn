@@ -6,6 +6,10 @@ import (
 )
 
 func searchingNumberOrHalfMoveOrResult(l *lexy.Lexer, r rune) (lexy.State, error) {
+	if lexy.IsEOF(r) {
+		return searchingNumberOrHalfMoveOrResult, nil
+	}
+
 	if lexy.IsBlank(r) {
 		return searchingNumberOrHalfMoveOrResult, nil
 	}

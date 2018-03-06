@@ -1,7 +1,6 @@
 package pgn
 
 import (
-	"bufio"
 	"github.com/xrash/pgn/movetext"
 	"github.com/xrash/pgn/tagpairs"
 	"io"
@@ -9,15 +8,14 @@ import (
 )
 
 func ParseString(pgn string) (*Game, error) {
-	return Parse(strings.NewReader(strings.TrimSpace(pgn)))
+	return Parse(strings.NewReader(pgn))
 }
 
 func Parse(r io.Reader) (*Game, error) {
-	s := bufio.NewScanner(r)
-	s.Split(bufio.ScanLines)
-
-	tagpairSection := scanUntilBlankLine(s)
-	movetextSection := scanUntilBlankLine(s)
+	tagpairSection, movetextSection, err := SplitPGNSections(r)
+	if err != nil {
+		return nil, err
+	}
 
 	tagpairs, err := tagpairs.Parse(tagpairSection)
 	if err != nil {
@@ -35,20 +33,4 @@ func Parse(r io.Reader) (*Game, error) {
 	}
 
 	return g, nil
-}
-
-func scanUntilBlankLine(s *bufio.Scanner) string {
-	lines := make([]string, 0)
-
-	for s.Scan() {
-		line := s.Text()
-
-		if line == "" {
-			break
-		}
-
-		lines = append(lines, line)
-	}
-
-	return strings.Join(lines, "\n")
 }

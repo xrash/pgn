@@ -6,6 +6,10 @@ import (
 )
 
 func searchingOpenTagpair(l *lexy.Lexer, r rune) (lexy.State, error) {
+	if lexy.IsEOF(r) {
+		return nil, nil
+	}
+
 	if lexy.IsBlank(r) {
 		return searchingOpenTagpair, nil
 	}

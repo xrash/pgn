@@ -37,8 +37,8 @@ func compareTagpairs(t *testing.T, v, e *tagpairs.Tagpairs) {
 }
 
 func compareMovetext(t *testing.T, v, e *movetext.Movetext) {
-	assert.Equal(t, len(v.Moves), len(e.Moves), "Length of movetext moves should be equal.")
-	assert.Equal(t, v.Result, e.Result, "Movetext results should be equal.")
+	assert.Equal(t, len(e.Moves), len(v.Moves), "Length of movetext moves should be equal.")
+	assert.Equal(t, e.Result, v.Result, "Movetext results should be equal.")
 
 	for i := range v.Moves {
 		assert.Equal(t, v.Moves[i].White, e.Moves[i].White, fmt.Sprintf("White move at index %d should be equal.", i))
