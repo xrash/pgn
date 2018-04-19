@@ -68,16 +68,37 @@ func inNumberOrResult(l *lexy.Lexer, r rune) (lexy.State, error) {
 		return inResult, nil
 	}
 
-	if lexy.IsNumber(r) || r == '.' {
+	if lexy.IsNumber(r) {
 		l.Collect(r)
 		return inNumberOrResult, nil
+	}
+
+	if r == '.' {
+		l.Collect(r)
+		return inDots, nil
 	}
 
 	return nil, fmt.Errorf("Expecting a number or a result, got %v", r)
 }
 
-func inResult(l *lexy.Lexer, r rune) (lexy.State, error) {
+func inDots(l *lexy.Lexer, r rune) (lexy.State, error) {
+	if r == '.' {
+		l.Collect(r)
+		return inDots, nil
+	}
+
 	if lexy.IsBlank(r) {
+		l.Emit("MoveNumber")
+		return searchingNumberOrHalfMoveOrResult, nil
+	}
+
+	l.Emit("MoveNumber")
+	l.Collect(r)
+	return inHalfMove, nil
+}
+
+func inResult(l *lexy.Lexer, r rune) (lexy.State, error) {
+	if lexy.IsBlank(r) || lexy.IsEOF(r) {
 		l.Emit("Result")
 		return searchingNumberOrHalfMoveOrResult, nil
 	}
