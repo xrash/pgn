@@ -29,7 +29,6 @@ func (p *parser) parse(back chan *parserResult) {
 	var err error
 	movetext := NewMovetext()
 
-	fmt.Println("parse movetext")
 	for t := range p.tokens {
 		if t.Key == lexy.EOFToken {
 			break
@@ -47,7 +46,6 @@ func (p *parser) parse(back chan *parserResult) {
 		}
 	}
 
-	fmt.Println("wat")
 	back <- &parserResult{
 		movetext: movetext,
 		err:      err,

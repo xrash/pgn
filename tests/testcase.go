@@ -43,6 +43,6 @@ func compareMovetext(t *testing.T, v, e *movetext.Movetext) {
 	for i := range v.Moves {
 		assert.Equal(t, v.Moves[i].White, e.Moves[i].White, fmt.Sprintf("White move at index %d should be equal.", i))
 		assert.Equal(t, v.Moves[i].Black, e.Moves[i].Black, fmt.Sprintf("Black move at index %d should be equal.", i))
-		assert.Equal(t, v.Moves[i].Number, e.Moves[i].Number, fmt.Sprintf("Move number at index %s should be equal.", i))
+		assert.Equal(t, v.Moves[i].Number, e.Moves[i].Number, fmt.Sprintf("Move number at index %d should be equal.", i))
 	}
 }
